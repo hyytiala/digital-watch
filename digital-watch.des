@@ -1,0 +1,30 @@
+INITIALIZER:
+    from Tkinter import *
+    from DWatchGUI import DWatchGUI
+
+    root = Tk()
+    root.title("A Title")
+    g = DWatchGUI(root, eventhandler)
+
+    eventhandler.start()
+
+    root.mainloop()
+    exit()
+
+STATECHART:
+    A [DS]
+    B
+
+TRANSITION:
+    S: A
+    N: B
+    E: lightOn
+    O: print "set light on"
+       g.setIndiglo()
+
+TRANSITION:
+    S: B
+    N: A
+    E: lightOff
+    O: print "light off"
+       g.unsetIndiglo()
