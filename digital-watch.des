@@ -69,24 +69,28 @@ TRANSITION:
 TRANSITION:
     S: E.CHRONO_ON
     N: E.CHRONO_ON
+    C: [INSTATE("C.CHRONO_MODE")]
     E: resetChrono
     O: g.resetChrono()
 
 TRANSITION:
     S: E.CHRONO_OFF
     N: E.CHRONO_OFF
+    C: [INSTATE("C.CHRONO_MODE")]
     E: resetChrono
     O: g.resetChrono()
 
 TRANSITION:
     S: E.CHRONO_ON
     N: E.CHRONO_OFF
+    C: [INSTATE("C.CHRONO_MODE")]
     E: initChrono
     O: print "turning chrono on"
 
 TRANSITION:
     S: E.CHRONO_OFF
     N: E.CHRONO_ON
+    C: [INSTATE("C.CHRONO_MODE")]
     E: initChrono
     O: print "turning chrono off"
 
