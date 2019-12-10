@@ -22,10 +22,15 @@ STATECHART:
     C [DS]
      TIME_MODE [DS]
      CHRONO_MODE
+     TIME_EDITING_MODE
     REFRESH_CHRONO [DS]
      LOOP [DS]
     REFRESH_TIME [DS]
      LOOP [DS]
+    TIME_EDITING [DS]
+     INITIAL [DS]
+     TIMEOUT_1
+     FINAL
 
 # Clock loop
 
@@ -77,18 +82,58 @@ TRANSITION:
    E: changeMode
    O: print "set time mode"
 
+# Time edit mode 5 sec timeout
+# BUG
+TRANSITION:
+   S: C.TIME_EDITING_MODE
+   N: C.TIME_MODE
+   T: 5 [OTT]
+   O: g.stopSelection() # Stop editing time if 5 seconds have passed
+
+TRANSITION:
+   S: C.TIME_EDITING_MODE
+   N: C.TIME_EDITING_MODE
+   E: increase # Reset timer if increase is pressed
+
 # Display update
 
 TRANSITION:
     S: REFRESH_TIME.LOOP
     N: REFRESH_TIME.LOOP
-    T: 0.01
+    T: 0.05
     C: [INSTATE("C.TIME_MODE")]
     O: g.refreshTimeDisplay()
 
 TRANSITION:
     S: REFRESH_CHRONO.LOOP
     N: REFRESH_CHRONO.LOOP
-    T: 0.01
+    T: 0.05
     C: [INSTATE("C.CHRONO_MODE")]
     O: g.refreshChronoDisplay()
+
+TRANSITION:
+    S: REFRESH_TIME_EDITING_MODE.LOOP
+    N: REFRESH_TIME_EDITING_MODE.LOOP
+    T: 0.05
+    C: [INSTATE("C.TIME_EDITING_MODE")]
+    O: g.refreshTimeDisplay()
+
+# Bottom right button
+
+TRANSITION:
+    S: TIME_EDITING.INITIAL
+    N: TIME_EDITING.TIMEOUT_1
+    C: [INSTATE("C.TIME_MODE")] 
+    E: editTime
+
+TRANSITION:
+    S: TIME_EDITING.TIMEOUT_1
+    N: TIME_EDITING.INITIAL
+    E: released
+    O: print "Released time mode 1 -> initial"
+
+TRANSITION:
+    S: TIME_EDITING.TIMEOUT_1
+    N: C.TIME_EDITING_MODE
+    T: 1.5 [OTT]
+    O: g.startSelection()
