@@ -45,6 +45,7 @@ TRANSITION:
     N: A.CLOCK
     T: 1
     O: g.increaseTimeByOne()
+       print "Clock loop"
 
 # Light switch
 
@@ -52,27 +53,25 @@ TRANSITION:
    S: B.LIGHT_OFF
    N: B.TURN_LIGHT_ON
    E: lightOn
-   O: print "set light on"
+   O: print "Set light on"
       g.setIndiglo()
 
 TRANSITION:
    S: B.TURN_LIGHT_ON
    N: B.LIGHT_ON
    T: 0.1
-   O: print "light is on"
 
 TRANSITION:
    S: B.LIGHT_ON
    N: B.TURN_LIGHT_OFF
    E: lightOff
-   O: print "turning light off"
 
 TRANSITION:
     S: B.TURN_LIGHT_OFF
     N: B.LIGHT_OFF
     T: 2 [OTT]
-    O: print "light off"
-       g.unsetIndiglo()
+    O: g.unsetIndiglo()
+       print "Turn light off"
 
 # Chrono toggle
 
@@ -80,76 +79,70 @@ TRANSITION:
    S: C.TIME_MODE
    N: C.CHRONO_MODE
    E: changeMode
-   O: print "set chrono mode"
+   O: print "Set chrono mode"
 
 TRANSITION:
    S: C.CHRONO_MODE
    N: C.TIME_MODE
    E: changeMode
-   O: print "set time mode"
+   O: print "Set time mode"
 
 # Time edit mode 5 sec timeout
 TRANSITION:
    S: C.TIME_EDITING_MODE
    N: TMP.TIME_EDITING_TIMEOUT_1
    T: 1 [OTT]
-   O: print "1 second elapsed with no command"
+   O: print "Time edit mode: 1 second elapsed with no command"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_1
    N: TMP.TIME_EDITING_TIMEOUT_2
    T: 1 [OTT]
-   O: print "2 seconds elapsed with no command"
+   O: print "Time edit mode: 2 seconds elapsed with no command"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_1
    N: C.TIME_EDITING_MODE
    E: increase
-   O: print "Timeout 1 -> time editing"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_2
    N: C.TIME_EDITING_MODE
    E: increase
-   O: print "Timeout 2 -> time editing"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_3
    N: C.TIME_EDITING_MODE
    E: increase
-   O: print "Timeout 3 -> time editing"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_4
    N: C.TIME_EDITING_MODE
    E: increase
-   O: print "Timeout 4 -> time editing"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_5
    N: C.TIME_EDITING_MODE
    E: increase
-   O: print "Timeout 5 -> time editing"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_2
    N: TMP.TIME_EDITING_TIMEOUT_3
    T: 1 [OTT]
-   O: print "3 seconds elapsed with no command"
+   O: print "Time edit mode: 3 seconds elapsed with no command"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_3
    N: TMP.TIME_EDITING_TIMEOUT_4
    T: 1 [OTT]
-   O: print "4 seconds elapsed with no command"
+   O: print "Time edit mode: 4 seconds elapsed with no command"
 
 TRANSITION:
    S: TMP.TIME_EDITING_TIMEOUT_4
    N: C.TIME_MODE
    T: 1 [OTT]
-   O: print "5 seconds elapsed with no command, moving to time mode"
+   O: print "Time edit mode: 5 seconds elapsed with no command, moving to time mode"
       g.stopSelection()
-      g.refreshTimeDisplay()
       
 
 TRANSITION:
@@ -177,7 +170,7 @@ TRANSITION:
     S: REFRESH_TIME_EDITING_MODE.LOOP
     N: REFRESH_TIME_EDITING_MODE.LOOP
     T: 0.05
-    C: [INSTATE("C.TIME_EDITING_MODE")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_1")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_2")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_3")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_4")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_5")] 
+    C: [INSTATE("C.TIME_EDITING_MODE")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_1")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_2")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_3")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_4")]
     O: g.refreshTimeDisplay()
 
 # Bottom right button
