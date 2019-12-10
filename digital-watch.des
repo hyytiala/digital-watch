@@ -13,18 +13,25 @@ INITIALIZER:
 
 STATECHART:
     A [DS] 
-     CLOCK [DS]
+     CLOCK [DS] # Clock loop
     B [DS]
-     TURN_LIGHT_ON
-     LIGHT_OFF [DS]
-     LIGHT_ON
+     TURN_LIGHT_ON # Command to turn the light on
+     LIGHT_OFF [DS] # Initial state where the light is off
+     LIGHT_ON # State where the light is on
      TURN_LIGHT_OFF
+    C [DS]
+     TIME_MODE [DS]
+     CHRONO_MODE
+
+# Clock loop
 
 TRANSITION:
     S: A.CLOCK
     N: A.CLOCK
     T: 1
     O: g.increaseTimeByOne()
+
+# Light switch
 
 TRANSITION:
    S: B.LIGHT_OFF
@@ -51,3 +58,17 @@ TRANSITION:
     T: 2 [OTT]
     O: print "light off"
        g.unsetIndiglo()
+
+# Chrono toggle
+
+TRANSITION:
+   S: C.TIME_MODE
+   N: C.CHRONO_MODE
+   E: changeMode
+   O: print "set chrono mode"
+
+TRANSITION:
+   S: C.CHRONO_MODE
+   N: C.TIME_MODE
+   E: changeMode
+   O: print "set time mode"
