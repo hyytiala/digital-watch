@@ -33,6 +33,9 @@ STATECHART:
      LOOP [DS]
     REFRESH_TIME [DS]
      LOOP [DS]
+    D [DS]
+     ALARM_OFF [DS]
+     ALARM_ON
     TIME_EDITING [DS]
      INITIAL [DS]
      TIMEOUT_1
@@ -193,3 +196,26 @@ TRANSITION:
     T: 1.5 [OTT]
     O: g.startSelection()
        print "Moving to time editing mode"
+
+
+# Alarm on/off
+
+TRANSITION:
+   S: D.ALARM_OFF
+   N: D.ALARM_ON
+   E: setAlarm
+   O: print "set alarm on"
+      g.setAlarm()
+
+TRANSITION:
+   S: D.ALARM_ON
+   N: D.ALARM_OFF
+   E: setAlarm
+   O: print "set alarm off"
+      g.setAlarm()
+TRANSITION:
+    S: REFRESH_TIME_EDITING_MODE.LOOP
+    N: REFRESH_TIME_EDITING_MODE.LOOP
+    T: 0.05
+    C: [INSTATE("C.TIME_EDITING_MODE")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_1")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_2")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_3")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_4")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_5")] 
+    O: g.refreshTimeDisplay()
