@@ -12,9 +12,9 @@ INITIALIZER:
     exit()
 
 STATECHART:
-    A [CS][DS] 
+    A [DS] 
      CLOCK [DS]
-    B [CS][DS]
+    B [DS]
      LIGHT_OFF [DS]
      LIGHT_ON
 
