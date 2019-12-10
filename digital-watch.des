@@ -197,6 +197,13 @@ TRANSITION:
    N: C.TIME_EDITING_MODE
    E: increase # Reset timer if increase is pressed
 
+TRANSITION:
+   S: C.TIME_EDITING_MODE
+   N: C.TIME_EDITING_MODE
+   E: stopInc 
+   O: g.increaseSelection() # Increment once
+      print
+
 # Display update
 
 TRANSITION:
