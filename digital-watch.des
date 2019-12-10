@@ -12,19 +12,28 @@ INITIALIZER:
     exit()
 
 STATECHART:
-    A [DS]
-    B
+    A [CS][DS] 
+     CLOCK [DS]
+    B [CS][DS]
+     LIGHT_OFF [DS]
+     LIGHT_ON
 
 TRANSITION:
-    S: A
-    N: B
-    E: lightOn
-    O: print "set light on"
-       g.setIndiglo()
+    S: A.CLOCK
+    N: A.CLOCK
+    T: 1
+    O: g.increaseTimeByOne()
 
 TRANSITION:
-    S: B
-    N: A
+   S: B.LIGHT_OFF
+   N: B.LIGHT_ON
+   E: lightOn
+   O: print "set light on"
+      g.setIndiglo()
+
+TRANSITION:
+    S: B.LIGHT_ON
+    N: B.LIGHT_OFF
     E: lightOff
     O: print "light off"
        g.unsetIndiglo()
