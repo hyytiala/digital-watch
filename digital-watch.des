@@ -80,7 +80,7 @@ TRANSITION:
 
 TRANSITION:
     S: E.CHRONO_ON
-    N: D.CHRONO_OFF
+    N: E.CHRONO_OFF
     E: initChrono
     O: print "turning chrono on"
 
