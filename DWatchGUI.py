@@ -86,8 +86,9 @@ class DWatchGUI:
   #Select current display:
   
   def startSelection(self):
+    self.eventhandler.event("toEditingMode")
     self.GUI.startSelection()
-    
+
   def selectNext(self):
     self.GUI.selectNext() 
        
