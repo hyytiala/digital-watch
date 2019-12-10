@@ -23,6 +23,7 @@ STATECHART:
      TIME_MODE [DS]
      CHRONO_MODE
      TIME_EDITING_MODE
+     ALARM_EDITING_MODE
     TMP
      TIME_EDITING_TIMEOUT_1
      TIME_EDITING_TIMEOUT_2
@@ -37,6 +38,10 @@ STATECHART:
      ALARM_OFF [DS]
      ALARM_ON
     TIME_EDITING [DS]
+     INITIAL [DS]
+     TIMEOUT_1
+     FINAL
+    ALARM_EDITING [DS]
      INITIAL [DS]
      TIMEOUT_1
      FINAL
@@ -197,6 +202,13 @@ TRANSITION:
     O: g.startSelection()
        print "Moving to time editing mode"
 
+TRANSITION:
+    S: REFRESH_TIME_EDITING_MODE.LOOP
+    N: REFRESH_TIME_EDITING_MODE.LOOP
+    T: 0.05
+    C: [INSTATE("C.TIME_EDITING_MODE")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_1")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_2")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_3")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_4")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_5")] 
+    O: g.refreshTimeDisplay()
+
 
 # Alarm on/off
 
@@ -213,9 +225,23 @@ TRANSITION:
    E: setAlarm
    O: print "set alarm off"
       g.setAlarm()
+
 TRANSITION:
-    S: REFRESH_TIME_EDITING_MODE.LOOP
-    N: REFRESH_TIME_EDITING_MODE.LOOP
-    T: 0.05
-    C: [INSTATE("C.TIME_EDITING_MODE")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_1")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_2")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_3")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_4")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_5")] 
-    O: g.refreshTimeDisplay()
+    S: ALARM_EDITING.INITIAL
+    N: ALARM_EDITING.TIMEOUT_1
+    C: [INSTATE("C.TIME_MODE")] 
+    E: setAlarm
+    O: print "User holding edit alarm button"
+
+TRANSITION:
+    S: ALARM_EDITING.TIMEOUT_1
+    N: ALARM_EDITING.INITIAL
+    E: onoff
+
+TRANSITION:
+    S: ALARM_EDITING.TIMEOUT_1
+    N: C.ALARM_EDITING_MODE
+    T: 1.5 [OTT]
+    O: g.refreshAlarmDisplay()
+       g.startSelection()
+       print "Moving to alarm editing mode"
