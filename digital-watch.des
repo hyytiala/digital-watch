@@ -22,6 +22,10 @@ STATECHART:
     C [DS]
      TIME_MODE [DS]
      CHRONO_MODE
+    REFRESH_CHRONO [DS]
+     LOOP [DS]
+    REFRESH_TIME [DS]
+     LOOP [DS]
 
 # Clock loop
 
@@ -66,6 +70,22 @@ TRANSITION:
    N: C.CHRONO_MODE
    E: changeMode
    O: print "set chrono mode"
+
+TRANSITION:
+    S: REFRESH_TIME.LOOP
+    N: REFRESH_TIME.LOOP
+    T: 0.5
+    C: [INSTATE("C.TIME_MODE")]
+    O: g.refreshTimeDisplay()
+       print "Refreshing time"
+
+TRANSITION:
+    S: REFRESH_CHRONO.LOOP
+    N: REFRESH_CHRONO.LOOP
+    T: 0.5
+    C: [INSTATE("C.CHRONO_MODE")]
+    O: g.refreshChronoDisplay()
+       print "Refreshing chrono"
 
 TRANSITION:
    S: C.CHRONO_MODE
