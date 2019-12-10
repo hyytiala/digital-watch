@@ -45,6 +45,9 @@ STATECHART:
      INITIAL [DS]
      TIMEOUT_1
      FINAL
+    E [DS]
+     CHRONO_ON # Chrono loop
+     CHRONO_OFF [DS]
 
 # Clock loop
 
@@ -54,6 +57,38 @@ TRANSITION:
     T: 1
     O: g.increaseTimeByOne()
        print "Clock loop"
+
+# Chrono loop
+
+TRANSITION:
+    S: E.CHRONO_ON
+    N: E.CHRONO_ON
+    T: 0.01
+    O: g.increaseChronoByOne()
+
+TRANSITION:
+    S: E.CHRONO_ON
+    N: E.CHRONO_ON
+    E: resetChrono
+    O: g.resetChrono()
+
+TRANSITION:
+    S: E.CHRONO_OFF
+    N: E.CHRONO_OFF
+    E: resetChrono
+    O: g.resetChrono()
+
+TRANSITION:
+    S: E.CHRONO_ON
+    N: D.CHRONO_OFF
+    E: initChrono
+    O: print "turning chrono on"
+
+TRANSITION:
+    S: E.CHRONO_OFF
+    N: E.CHRONO_ON
+    E: initChrono
+    O: print "turning chrono off"
 
 # Light switch
 
