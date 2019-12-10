@@ -80,7 +80,7 @@ TRANSITION:
 
 TRANSITION:
     S: E.CHRONO_ON
-    N: D.CHRONO_OFF
+    N: E.CHRONO_OFF
     E: initChrono
     O: print "turning chrono on"
 
@@ -201,7 +201,6 @@ TRANSITION:
     T: 0.05
     C: [INSTATE("C.TIME_MODE")] or [INSTATE("C.TIME_EDITING_MODE")]
     O: g.refreshTimeDisplay()
-       print "Refreshing time"
 
 TRANSITION:
     S: REFRESH_CHRONO.LOOP
@@ -245,6 +244,7 @@ TRANSITION:
    S: D.ALARM_OFF
    N: D.ALARM_ON
    E: setAlarm
+   C: [INSTATE("C.TIME_MODE")] 
    O: print "set alarm on"
       g.setAlarm()
 
@@ -252,6 +252,7 @@ TRANSITION:
    S: D.ALARM_ON
    N: D.ALARM_OFF
    E: setAlarm
+   C: [INSTATE("C.TIME_MODE")] 
    O: print "set alarm off"
       g.setAlarm()
 
