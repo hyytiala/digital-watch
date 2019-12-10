@@ -88,6 +88,10 @@ class DWatchGUI:
   def startSelection(self):
     self.eventhandler.event("toEditingMode")
     self.GUI.startSelection()
+  
+  def startSelectionAlarm(self):
+    self.eventhandler.event("toAlarmEditingMode")
+    self.GUI.startSelection()
 
   def selectNext(self):
     self.GUI.selectNext() 

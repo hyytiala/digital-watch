@@ -286,11 +286,16 @@ TRANSITION:
 
 TRANSITION:
     S: ALARM_EDITING.TIMEOUT_1
-    N: C.ALARM_EDITING_MODE
+    N: ALARM_EDITING.INITIAL
     T: 1.5 [OTT]
     O: g.refreshAlarmDisplay()
-       g.startSelection()
+       g.startSelectionAlarm()
        print "Moving to alarm editing mode"
+
+TRANSITION:
+    S: C.TIME_MODE
+    N: C.ALARM_EDITING_MODE
+    E: toAlarmEditingMode
 
 TRANSITION:
    S: C.ALARM_EDITING_MODE
