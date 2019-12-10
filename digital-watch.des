@@ -26,6 +26,9 @@ STATECHART:
      LOOP [DS]
     REFRESH_TIME [DS]
      LOOP [DS]
+    D [DS]
+     ALARM_OFF [DS]
+     ALARM_ON
 
 # Clock loop
 
@@ -92,3 +95,19 @@ TRANSITION:
     T: 0.01
     C: [INSTATE("C.CHRONO_MODE")]
     O: g.refreshChronoDisplay()
+
+# Alarm on/off
+
+TRANSITION:
+   S: D.ALARM_OFF
+   N: D.ALARM_ON
+   E: setAlarm
+   O: print "set alarm on"
+      g.setAlarm()
+
+TRANSITION:
+   S: D.ALARM_ON
+   N: D.ALARM_OFF
+   E: setAlarm
+   O: print "set alarm off"
+      g.setAlarm()
