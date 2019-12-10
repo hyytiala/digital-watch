@@ -15,8 +15,10 @@ STATECHART:
     A [DS] 
      CLOCK [DS]
     B [DS]
+     TURN_LIGHT_ON
      LIGHT_OFF [DS]
      LIGHT_ON
+     TURN_LIGHT_OFF
 
 TRANSITION:
     S: A.CLOCK
@@ -26,14 +28,26 @@ TRANSITION:
 
 TRANSITION:
    S: B.LIGHT_OFF
-   N: B.LIGHT_ON
+   N: B.TURN_LIGHT_ON
    E: lightOn
    O: print "set light on"
       g.setIndiglo()
 
 TRANSITION:
-    S: B.LIGHT_ON
+   S: B.TURN_LIGHT_ON
+   N: B.LIGHT_ON
+   T: 0.1
+   O: print "light is on"
+
+TRANSITION:
+   S: B.LIGHT_ON
+   N: B.TURN_LIGHT_OFF
+   E: lightOff
+   O: print "turning light off"
+
+TRANSITION:
+    S: B.TURN_LIGHT_OFF
     N: B.LIGHT_OFF
-    E: lightOff
+    T: 2 [OTT]
     O: print "light off"
        g.unsetIndiglo()
