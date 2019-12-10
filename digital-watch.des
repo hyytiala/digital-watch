@@ -23,6 +23,12 @@ STATECHART:
      TIME_MODE [DS]
      CHRONO_MODE
      TIME_EDITING_MODE
+    TMP
+     TIME_EDITING_TIMEOUT_1
+     TIME_EDITING_TIMEOUT_2
+     TIME_EDITING_TIMEOUT_3
+     TIME_EDITING_TIMEOUT_4
+     TIME_EDITING_TIMEOUT_5
     REFRESH_CHRONO [DS]
      LOOP [DS]
     REFRESH_TIME [DS]
@@ -83,12 +89,68 @@ TRANSITION:
    O: print "set time mode"
 
 # Time edit mode 5 sec timeout
-# BUG
 TRANSITION:
    S: C.TIME_EDITING_MODE
+   N: TMP.TIME_EDITING_TIMEOUT_1
+   T: 1 [OTT]
+   O: print "1 second elapsed with no command"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_1
+   N: TMP.TIME_EDITING_TIMEOUT_2
+   T: 1 [OTT]
+   O: print "2 seconds elapsed with no command"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_1
+   N: C.TIME_EDITING_MODE
+   E: increase
+   O: print "Timeout 1 -> time editing"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_2
+   N: C.TIME_EDITING_MODE
+   E: increase
+   O: print "Timeout 2 -> time editing"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_3
+   N: C.TIME_EDITING_MODE
+   E: increase
+   O: print "Timeout 3 -> time editing"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_4
+   N: C.TIME_EDITING_MODE
+   E: increase
+   O: print "Timeout 4 -> time editing"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_5
+   N: C.TIME_EDITING_MODE
+   E: increase
+   O: print "Timeout 5 -> time editing"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_2
+   N: TMP.TIME_EDITING_TIMEOUT_3
+   T: 1 [OTT]
+   O: print "3 seconds elapsed with no command"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_3
+   N: TMP.TIME_EDITING_TIMEOUT_4
+   T: 1 [OTT]
+   O: print "4 seconds elapsed with no command"
+
+TRANSITION:
+   S: TMP.TIME_EDITING_TIMEOUT_4
    N: C.TIME_MODE
-   T: 5 [OTT]
-   O: g.stopSelection() # Stop editing time if 5 seconds have passed
+   T: 1 [OTT]
+   O: print "5 seconds elapsed with no command, moving to time mode"
+      g.stopSelection()
+      g.refreshTimeDisplay()
+      
 
 TRANSITION:
    S: C.TIME_EDITING_MODE
@@ -115,7 +177,7 @@ TRANSITION:
     S: REFRESH_TIME_EDITING_MODE.LOOP
     N: REFRESH_TIME_EDITING_MODE.LOOP
     T: 0.05
-    C: [INSTATE("C.TIME_EDITING_MODE")]
+    C: [INSTATE("C.TIME_EDITING_MODE")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_1")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_2")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_3")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_4")] or [INSTATE("TMP.TIME_EDITING_TIMEOUT_5")] 
     O: g.refreshTimeDisplay()
 
 # Bottom right button
@@ -125,15 +187,16 @@ TRANSITION:
     N: TIME_EDITING.TIMEOUT_1
     C: [INSTATE("C.TIME_MODE")] 
     E: editTime
+    O: print "User holding edit time button"
 
 TRANSITION:
     S: TIME_EDITING.TIMEOUT_1
     N: TIME_EDITING.INITIAL
     E: released
-    O: print "Released time mode 1 -> initial"
 
 TRANSITION:
     S: TIME_EDITING.TIMEOUT_1
     N: C.TIME_EDITING_MODE
     T: 1.5 [OTT]
     O: g.startSelection()
+       print "Moving to time editing mode"
